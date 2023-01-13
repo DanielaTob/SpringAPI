@@ -2,10 +2,12 @@ package com.project.marketapi.persistence;
 
 import com.project.marketapi.persistence.crud.ProductoCrudRepository;
 import com.project.marketapi.persistence.entity.Producto;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository //Le indicamos que esta clase es la que va a interactuar con la base de datos
 public class ProductoRepository {
 
     private ProductoCrudRepository productoCrudRepository;
@@ -28,5 +30,15 @@ public class ProductoRepository {
     //4. Metodo para consultar un producto en particular
     public Optional<Producto> getProducto(int idProducto){
         return productoCrudRepository.findById(idProducto);
+    }
+
+    //Metodo para guardar un producto
+    public Producto save(Producto producto){
+        return productoCrudRepository.save(producto);
+    }
+
+    //Metodo para eliminar un producto
+    public void delete(int idProducto){
+        productoCrudRepository.deleteById(idProducto);
     }
 }
