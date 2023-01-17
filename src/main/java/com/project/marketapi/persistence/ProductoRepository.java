@@ -5,6 +5,7 @@ import com.project.marketapi.domain.repository.ProductRepository;
 import com.project.marketapi.persistence.crud.ProductoCrudRepository;
 import com.project.marketapi.persistence.entity.Producto;
 import com.project.marketapi.persistence.mapper.ProductMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.Optional;
 @Repository //Le indicamos que esta clase es la que va a interactuar con la base de datos
 public class ProductoRepository  implements ProductRepository {
 
+    @Autowired
     private ProductoCrudRepository productoCrudRepository;
+    @Autowired
     private ProductMapper mapper;
 
     //1. Metodo que recupera toda la lista de productos de la DB

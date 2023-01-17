@@ -19,6 +19,7 @@ public interface CategoryMapper {
     Category toCategory(Categoria categoria);
 
     //Conversion externa
+
     @InheritInverseConfiguration //Realiza el mapeo inverso de lo que se realizó arriba
     @Mapping(target = "productos", ignore = true)
     Categoria toCategoria(Category category);
