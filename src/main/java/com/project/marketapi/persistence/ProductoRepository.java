@@ -1,44 +1,63 @@
 package com.project.marketapi.persistence;
 
+import com.project.marketapi.domain.Product;
+import com.project.marketapi.domain.repository.ProductRepository;
 import com.project.marketapi.persistence.crud.ProductoCrudRepository;
 import com.project.marketapi.persistence.entity.Producto;
+import com.project.marketapi.persistence.mapper.ProductMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository //Le indicamos que esta clase es la que va a interactuar con la base de datos
-public class ProductoRepository {
+public class ProductoRepository  implements ProductRepository {
 
     private ProductoCrudRepository productoCrudRepository;
+    private ProductMapper mapper;
 
     //1. Metodo que recupera toda la lista de productos de la DB
-    public List<Producto> getAll() {
-        return (List<Producto>) productoCrudRepository.findAll();
+    @Override
+    public List<Product> getAll() {
+        List<Producto> productos = (List<Producto>) productoCrudRepository.findAll();
+        return mapper.toProducts(productos);
     }
 
     //2. Metodo que retorna una lista de productos de una categoria
-    public List<Producto> getByCategoria(int idCategoria){
-        return productoCrudRepository.findByIdCategoriaOrderByNombreAsc(idCategoria);
+    @Override
+    public Optional<List<Product>> getByCategory(int categoryId) {
+        List<Producto> productos = productoCrudRepository.findByIdCategoriaOrderByNombreAsc(categoryId);
+        return Optional.of(mapper.toProducts(productos));
     }
 
     //3. Metodo para consultar productos escasos
-    public Optional<List<Producto>> getEscasos(int cantidad){
-        return productoCrudRepository.findByCantidadStockLessThanAndEstado(cantidad, true);
+    @Override
+    public Optional<List<Product>> getScarseProducts(int quantity) {
+        Optional<List<Producto>> productos = productoCrudRepository.findByCantidadStockLessThanAndEstado(quantity, true);
+        return productos.map(prods -> mapper.toProducts(prods));
+        //Funcion lambda para mappear.
+        // Recibe los productos que tiene adentro y los combierte a products y los retorna.
     }
 
     //4. Metodo para consultar un producto en particular
-    public Optional<Producto> getProducto(int idProducto){
-        return productoCrudRepository.findById(idProducto);
+    @Override
+    public Optional<Product> getProduct(int productId) {
+        //FindById ya contiene el optional
+        return productoCrudRepository.findById(productId).map(producto -> mapper.toProduct(producto));
+
     }
 
     //Metodo para guardar un producto
-    public Producto save(Producto producto){
-        return productoCrudRepository.save(producto);
+    @Override
+    public Product save(Product product) {
+        Producto producto = mapper.toProducto(product);
+        return mapper.toProduct(productoCrudRepository.save(producto));
     }
 
+
     //Metodo para eliminar un producto
-    public void delete(int idProducto){
-        productoCrudRepository.deleteById(idProducto);
+    @Override
+    public void delete(int productId){
+        productoCrudRepository.deleteById(productId);
     }
 }
