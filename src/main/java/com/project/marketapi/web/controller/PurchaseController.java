@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/purchases")
 public class PurchaseController {
 
-    @Autowired
+    @Autowired //Inyeccion de dependencia
     private PurchaseService purchaseService;
 
     //1. Metodo que retorna una lista de compras
