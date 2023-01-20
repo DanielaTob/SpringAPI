@@ -17,11 +17,7 @@ public class SwaggerConfig {
         //Aqui especificamos el tipon de documentacion a usar
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()  //Aqui indicamos los que queremos que exporte o exponga en la documentacion
-                .apis(RequestHandlerSelectors.basePackage("com.project.marketapi.web.controller;"))  //Solamente los que esten en controller y copiamos el paquete
+                .apis(RequestHandlerSelectors.basePackage("com.project.marketapi.web.controller"))  //Solamente los que esten en controller y copiamos el paquete - quitar ; punto y coma
                 .build();
-
-
-
-
     }
 }

@@ -2,6 +2,10 @@ package com.project.marketapi.web.controller;
 
 import com.project.marketapi.domain.Product;
 import com.project.marketapi.domain.service.ProductService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +25,21 @@ public class ProductController {
 
     //1. Metodo que retorna una lista de productos
     @GetMapping("/all")
+    @ApiOperation("Get all supermarket products") //Docu swagger
+    @ApiResponse(code = 200, message = "OK") //Docu swagger
     public ResponseEntity<List<Product>> getAll(){
         return new ResponseEntity<>(productService.getAll(), HttpStatus.OK);
     }
 
     //2. Metodo que encuentra un producto por id
     @GetMapping("/{productId}") //Para solucionar el error 404, debo poner el mismo nombre en get y path
-    public ResponseEntity<Product> getProduct(@PathVariable("productId") int productId){
+    @ApiOperation("Search a product with an ID") //Docu swagger
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Product NOT_FOUND"),
+    })
+    public ResponseEntity<Product> getProduct(@ApiParam(value = "The id of the product", required = true, example = "7")   //Docu swagger
+                                                  @PathVariable("productId") int productId){
         return productService.getProduct(productId)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
